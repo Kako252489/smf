@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartFinance - Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+  <div id="app">
+    <header class='container'>
+      <div class='header-left'>
+        <a href="#" class='nav-link'>Home</a>
+        <div class='logo'>Smart<span>Finance</span></div>
+      </div>
+      <div class='header-right'>
+        <a href="#" class='nav-link'>Spending</a>
+        <a href="#" class='nav-link'>Calculators</a>
+        <a href="#" class='nav-link'>Budget Tools</a>
+        <button class='login-btn'>Login / Sign Up</button>
+      </div>
+    </header>
+
+    <main class='container calculator-section'>
+      <div class='calculator'>
+        <h3>Wage Calculator (by State)</h3>
+        <label>State</label>
+        <select v-model="state">
+          <option value='CA'>California</option>
+          <option value='TX'>Texas</option>
+          <option value='NY'>New York</option>
+        </select>
+        <label>Hours / Week</label>
+        <input type='number' v-model.number="hours" />
+        <label>Hourly Rate ($)</label>
+        <input type='number' v-model.number="rate" />
+        <button @click="calculateWage">Calculate</button>
+        <div class='result'>{{ wageResult }}</div>
+      </div>
+
+      <div class='calculator'>
+        <h3>Car Payment Calculator</h3>
+        <label>Car Price ($)</label>
+        <input type='number' v-model.number="carPrice" />
+        <label>Interest Rate (%)</label>
+        <input type='number' v-model.number="carRate" />
+        <label>Loan Term (Years)</label>
+        <input type='number' v-model.number="carYears" />
+        <button @click="calculateCarPayment">Calculate</button>
+        <div class='result'>{{ carPaymentResult }}</div>
+      </div>
+
+      <div class='calculator'>
+        <h3>Mortgage Calculator</h3>
+        <label>Home Price ($)</label>
+        <input type='number' v-model.number="homePrice" />
+        <label>Interest Rate (%)</label>
+        <input type='number' v-model.number="mortgageRate" />
+        <label>Loan Term (Years)</label>
+        <input type='number' v-model.number="mortgageYears" />
+        <button @click="calculateMortgage">Calculate</button>
+        <div class='result'>{{ mortgageResult }}</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          state: 'CA',
+          hours: 40,
+          rate: 15,
+          carPrice: 0,
+          carRate: 0,
+          carYears: 5,
+          homePrice: 0,
+          mortgageRate: 0,
+          mortgageYears: 30,
+          wageResult: '',
+          carPaymentResult: '',
+          mortgageResult: ''
+        };
+      },
+      methods: {
+        calculateWage() {
+          const weekly = this.hours * this.rate;
+          const monthly = weekly * 4;
+          const yearly = weekly * 52;
+          this.wageResult = `Monthly: $${monthly.toFixed(2)}, Yearly: $${yearly.toFixed(2)}`;
+        },
+        calculateCarPayment() {
+          const rate = this.carRate / 100 / 12;
+          const months = this.carYears * 12;
+          const payment = (this.carPrice * rate) / (1 - Math.pow(1 + rate, -months));
+          this.carPaymentResult = `Monthly Payment: $${payment.toFixed(2)}`;
+        },
+        calculateMortgage() {
+          const rate = this.mortgageRate / 100 / 12;
+          const months = this.mortgageYears * 12;
+          const payment = (this.homePrice * rate) / (1 - Math.pow(1 + rate, -months));
+          this.mortgageResult = `Monthly Payment: $${payment.toFixed(2)}`;
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
